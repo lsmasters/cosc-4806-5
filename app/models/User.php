@@ -74,8 +74,14 @@ class User {
       			unset($_SESSION['failedAuth']);
                 //log successful login
                 $this->log($username, "SUCCESS");
+                if ($username == 'admin'){
+                    $_SESSION['admin'] = 1;
+                    header('Location: /admin');
+                    die;
+                } else {
       			header('Location: /home');
       			die;
+                }
     		} else {
       			 if(isset($_SESSION['failedAuth'])) {
       				    $_SESSION['failedAuth'] ++; //increment
