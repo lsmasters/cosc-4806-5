@@ -6,5 +6,6 @@ class Admin extends Controller {
       $this->view('admin/index');
       die;
     }
+    
 
 }

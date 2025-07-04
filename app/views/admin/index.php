@@ -1,3 +1,4 @@
+<?php require_once 'app/views/templates/headerAdmin.php' ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,6 +60,7 @@
         labels: [...Array(30).keys()].map(i => `Day ${i+1}`),
         datasets: [{
           label: 'Logins',
+          //get data for the last 30 days from file log.log
           data: [12, 9, 15, 18, 10, 6, 13, 17, 21, 10, 9, 14, 20, 16, 22, 23, 21, 18, 17, 19, 20, 21, 22, 23, 19, 20, 18, 16, 14, 17],
           borderColor: 'rgba(59, 130, 246, 1)',
           fill: false,
