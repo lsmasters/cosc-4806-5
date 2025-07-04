@@ -24,13 +24,13 @@ if (!isset($_SESSION['auth']) && !isset($_SESSION['admin'])) {
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/admin/index.php">Home</a>
+          <a class="nav-link active" aria-current="page" href="admin">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="users.php">Users</a>
+          <a class="nav-link active" aria-current="page" href="adminUsers">Users</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/about">Reminders</a>
+          <a class="nav-link active" aria-current="page" href="/adminReminders">Reminders</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
