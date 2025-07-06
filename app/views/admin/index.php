@@ -1,4 +1,30 @@
 <?php require_once 'app/views/templates/headerAdmin.php' ?>
+
+<?php
+$logFile = 'logins.log';
+$daysBack = 30;
+$loginsPerDay = [];
+
+// 1,  Initialize array with the last 30 days (YYYY-MM-DD => 0)
+for ($i = $daysBack - 1; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $loginsPerDay[$date] = 0;
+}
+
+//2.  Read the log file line by line
+$lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+foreach ($lines as $line) {
+    // 3.  Match the log format: YYYY-MM-DD HH:MM:SS - username - result
+    if (preg_match('/^(\d{4}-\d{2}-\d{2}) \d{2}:\d{2}:\d{2} - .* - (SUCCESS|NEW USER)$/', $line, $matches)) {
+        $logDate = $matches[1];
+        if (isset($loginsPerDay[$logDate])) {
+            $loginsPerDay[$logDate]++;
+        }
+    }
+}
+$_SESSION['loginsPerDay'] = $loginsPerDay;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,7 +83,7 @@
         labels: [...Array(30).keys()].map(i => `D${i+1}`),
         datasets: [{
           label: 'Logins',
-          data: [12, 9, 15, 18, 10, 6, 13, 17, 21, 10, 9, 14, 20, 16, 22, 23, 21, 18, 17, 19, 20, 21, 22, 23, 19, 20, 18, 16, 14, 17],
+          data: <?php echo json_encode(array_values($_SESSION['loginsPerDay'])); ?>,
           borderColor: 'rgba(59,130,246,1)',
           fill: false,
           tension: 0.3,
