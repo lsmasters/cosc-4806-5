@@ -128,7 +128,8 @@ class User {
             preg_match('/[a-z]/', $password) && 
             preg_match('/[0-9]/', $password) &&
             preg_match('/[!@#$%]/',$password)){
-                $user->create_user($username,$password);  //add to db
+                $user->create_user($username,$password);  //add to 
+                $user->log($username, "NEW USER");
                 header ("Location: /login");
                 $_SESSION['passwordInvalid'] = 0;
                 die; 
