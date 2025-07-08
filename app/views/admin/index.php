@@ -1,5 +1,32 @@
 <?php require_once 'app/views/templates/headerAdmin.php' ?>
 
+<?php //find top five logins
+$logFile = 'logins.log';
+$lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+$userLoginCounts = [];
+
+foreach ($lines as $line) {
+    if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} - (.+?) - (SUCCESS|NEW USER)$/', $line, $matches)) {
+        $username = $matches[1];
+        if (!isset($userLoginCounts[$username])) {
+            $userLoginCounts[$username] = 0;
+        }
+        $userLoginCounts[$username]++;
+    }
+}
+
+// Sort by number of logins descending
+arsort($userLoginCounts);
+
+// Get top 5
+$topUsers = array_slice($userLoginCounts, 0, 5, true);
+
+// Store in session or display directly
+$_SESSION['topUsers'] = $topUsers;
+
+
+?>
+
 <?php  //get data fpr ACTIVE/INACTIVE/NEW USERS
 $logFile = 'logins.log';
 $daysBack = 30;
@@ -131,7 +158,7 @@ $_SESSION['loginsPerDay'] = $loginsPerDay;
         <canvas id="loginsChart" height="80"></canvas>
       </div>
       <div class="bg-white p-3 rounded shadow">
-        <h2 class="text-sm font-semibold mb-1">Reminders/User</h2>
+        <h2 class="text-sm font-semibold mb-1">Top 5 Users by Logins</h2>
         <canvas id="remindersChart" height="80"></canvas>
       </div>
     </div>
@@ -157,20 +184,31 @@ $_SESSION['loginsPerDay'] = $loginsPerDay;
       options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
     });
 
-    const remindersCtx = document.getElementById('remindersChart').getContext('2d');
-    new Chart(remindersCtx, {
-      type: 'bar',
-      data: {
-        labels: ['A', 'B', 'C', 'D', 'E'],
-        datasets: [{
-          label: 'Reminders',
-          data: [22, 34, 17, 9, 13],
-          backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#6366f1']
-        }]
+  const remindersCtx = document.getElementById('remindersChart').getContext('2d');
+
+  const topUserLabels = <?= json_encode(array_keys($_SESSION['topUsers'])); ?>;
+  const topUserCounts = <?= json_encode(array_values($_SESSION['topUsers'])); ?>;
+
+  new Chart(remindersCtx, {
+    type: 'bar',
+    data: {
+      labels: topUserLabels,
+      datasets: [{
+        label: 'Logins',
+        data: topUserCounts,
+        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#6366f1']
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: false }
       },
-      options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
-    });
-  </script>
+      scales: {
+        x: { display: true },
+        y: { display: true }
+      }
+    }
+  });  </script>
 
 </body>
 </html>
