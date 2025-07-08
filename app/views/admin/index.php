@@ -93,7 +93,7 @@ $_SESSION['loginsPerDay'] = $loginsPerDay;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard</title>
+  <title>Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
@@ -101,7 +101,7 @@ $_SESSION['loginsPerDay'] = $loginsPerDay;
 
   <!-- Top Bar -->
   <nav class="bg-white shadow px-4 py-2 flex justify-between items-center">
-    <h1 class="text-base font-bold text-gray-800">Admin Dashboard</h1>
+    <h1 class="text-base font-bold text-gray-800">Administrator's Dashboard(last 30 days)</h1>
     <span class="text-xs text-gray-600">Logged in as: <strong>admin</strong></span>
   </nav>
 
