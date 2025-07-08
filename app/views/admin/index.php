@@ -1,6 +1,69 @@
 <?php require_once 'app/views/templates/headerAdmin.php' ?>
 
-<?php
+<?php  //get data fpr ACTIVE/INACTIVE/NEW USERS
+$logFile = 'logins.log';
+$daysBack = 30;
+$lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+$users = []; // username => [firstSeen => date, logins => [dates]]
+$newUsers = [];
+
+$cutoffDate = date('Y-m-d', strtotime("-$daysBack days"));
+
+foreach ($lines as $line) {
+    if (preg_match('/^(\d{4}-\d{2}-\d{2}) \d{2}:\d{2}:\d{2} - (.+?) - (SUCCESS|NEW USER)$/', $line, $matches)) {
+        $date = $matches[1];
+        $username = $matches[2];
+        $status = $matches[3];
+
+        if (!isset($users[$username])) {
+            $users[$username] = [
+                'firstSeen' => $date,
+                'logins' => [],
+                'isNew' => ($status === 'NEW USER')
+            ];
+        }
+
+        $users[$username]['logins'][] = $date;
+
+        // Mark as new if their first log is NEW USER in the last 30 days
+        if ($status === 'NEW USER' && $date >= $cutoffDate) {
+            $newUsers[$username] = true;
+        }
+    }
+}
+
+// Determine active/inactive counts
+$active = 0;
+$inactive = 0;
+foreach ($users as $username => $info) {
+    $hasRecentLogin = false;
+    foreach ($info['logins'] as $loginDate) {
+        if ($loginDate >= $cutoffDate) {
+            $hasRecentLogin = true;
+            break;
+        }
+    }
+
+    if ($hasRecentLogin) {
+        $active++;
+    } elseif ($info['firstSeen'] < $cutoffDate) {
+        $inactive++;
+    }
+}
+
+$new = count($newUsers);
+
+// Store in session for display
+$_SESSION['stats'] = [
+    'active' => $active,
+    'inactive' => $inactive,
+    'new' => $new
+];
+
+?>
+
+<?php  //routine to get the logins/day for the last 30 days
 $logFile = 'logins.log';
 $daysBack = 30;
 $loginsPerDay = [];
@@ -48,15 +111,16 @@ $_SESSION['loginsPerDay'] = $loginsPerDay;
     <div class="grid grid-cols-3 gap-2">
       <div class="bg-white p-3 rounded shadow text-center">
         <h2 class="text-xs text-gray-500">Active</h2>
-        <p class="text-xl font-bold text-green-600">124</p>
+        <p class="text-xl font-bold text-green-600"><?= $_SESSION['stats']['active'] ?></p>
       </div>
       <div class="bg-white p-3 rounded shadow text-center">
         <h2 class="text-xs text-gray-500">Inactive</h2>
-        <p class="text-xl font-bold text-red-600">36</p>
+        <p class="text-xl font-bold text-red-600"><?= $_SESSION['stats']['inactive'] ?></p>
       </div>
       <div class="bg-white p-3 rounded shadow text-center">
         <h2 class="text-xs text-gray-500">New (30d)</h2>
-        <p class="text-xl font-bold text-blue-600">18</p>
+        <p class="text-xl font-bold text-blue-600"><?= $_SESSION['stats']['new'] ?></p>
+
       </div>
     </div>
 
