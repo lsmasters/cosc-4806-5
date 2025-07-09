@@ -1,28 +1,29 @@
-This assignment is a continuation of Assignment 3 which is also in Github.
+This assignment is a continuation of Assignment 4 which is also in Github.
 
-Assignment 4
-•	Allow a logged-in user to perform CRUD
-•	Create a reminder, view reminders (read), update existing reminders, and delete reminders
-•	The table should be called notes with at least 3 columns. Id, user_id, subject. You may want to add more such as: created_at, completed, deleted
-File structure used: 
+To conform with my password rules, I could not use the admin/admin combination so
+	LOGIN:            admin
+              PASSWORD:  Admin123$
+Assignment 5
+•	Update all header and footers. Look at other websites and see what is normally in those. Don't forget there are two headers (public/private)  
+A third header file was added for Administrator access only.
+•	Implement some components from Bootstrap (toasts, alerts, different nav, etc. See this: https://getbootstrap.com/docs/5.0/components)
+•	Create an admin user (username: admin, password: admin) *** see above ***
+•	Once logged in, they can run various reports at /reports (hint: that's the controller name).  The administrator’s dashboard has 1. A summary of users:  active, inactive, and new,  2.  A summary of site access in the last 30 day, and 3.  A summary of the top 5 users with the highest number of reminders.  There is also a tab for Users listing all users with the date of the last login and the number of logins for this month.  The second tab lists all the reminders by each user giving the administrator the option to edit or delete the reminder. 
+o	View all reminders;  a tab under administrator access.
+o	Who has the most reminders;  summarized under the administrator tab: reminders
+o	How many total logins by username/user page gives last login by user and total logins by user: ;  summarized under the administrator tab: users  
+o	Bonus: Implement a chart!  Administrator’s dashboard has line and bar graph.
+•	Update header to include new menu item (only for admin user):  implemented
+•	Put in ACLs that do not allow a non-admin user and non-logged-in users to view the page:  ACL handled through access restrictions in the header files
+•	All of the above will earn you 8/10. The last two can be earned by 1. Make your site look really good (CSS) without any errors. 2. Implement charts for the admin view. It's okay to use an existing JS library.
+	
 
-Name	Nullability	Data Type
- id	NOT NULL	int
- user_id	NULL	int
- subject	NULL	mediumtext
- created_at	NULL	timestamp		
-
-•	Update header to include the new item for creating reminders
-•	Your Models may look very similar from student to student. Your controller as well to a certain extent. However, your views should all be unique. You need to display the notes/reminders in a user-friendly way and the user should be able to update/delete them as well. There also needs to be a way for them to create. This is all covered in the video above.
-Lessons Learned:  This was perhaps the most challenging assignment so far:
+Lessons Learned:  This was challenging because of all the small pieces/requirements:
 1.	Make one change at a time and commit it to github. Know when to take a break and go back to your last success.
 2.	Error detection can be very challenging in php.
-3.	File paths and routing became a BIG issue at times.
-4.	Passing variables can be challenging depending on your controller setup.
+3.	File paths and routing became a BIG issue at times. Variables were sometimes an issue between model and view.
+4.	Spent too much time on the Administrator’s dashboard page and did not have time to make the pages pretty.
 Known issues:
-1.	 Routing at the end of EDIT and DELETE is a problem.  Must manually move by tab.
-2.	 The user must manually move from the CREATE REMINDER page once a reminder has been created…..not sure why? 
-3.	Much documentation is missing because I ran out of time.
-
-
+1.	 Much documentation is missing because I ran out of time.
+2.	 Home/Exit from the administrator’s section is wonky and inconsistent.  Did not have time to sort it out
 
